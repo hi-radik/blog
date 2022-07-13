@@ -1,4 +1,4 @@
-//Регистрация
+//Регистрацияs
 export const register = async (req,res)=>{
     try {
      const errors = validationResult(req);

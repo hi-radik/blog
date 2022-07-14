@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import UserModel from '../models/User.js'
 import checkAuth from '../utils/checkAuth.js'
 import {validationResult} from 'express-validator'
+
 //Регистрация
 export const register = async (req,res)=>{
     try {

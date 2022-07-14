@@ -24,11 +24,16 @@ app.get('/auth/me', checkAuth, UserController.authMe)
 //Посты
 //Получить все статьи
 app.get('/posts', PostController.getAllPosts)
-
+//Получить статью по id
 app.get('/posts/:id', PostController.getOnePost)
+//Создать статью
 app.post('/posts', checkAuth, postCreateValidator, PostController.createPost)
-//app.delete('/posts',  PostController.remove)
-//app.patch('/posts',  PostController.patch)
+//Удалить статью
+app.delete('/posts/:id',  checkAuth, PostController.remove)
+//Удалить все статьи
+app.delete('/posts',  checkAuth, PostController.removeAll)
+//Обновить статью
+app.patch('/posts/:id', checkAuth, postCreateValidator, PostController.update)
 
 app.listen(4444, (err)=>{
     if(err){

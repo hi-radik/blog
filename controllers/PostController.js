@@ -39,32 +39,91 @@ export const getAllPosts = async (req, res) => {
 //Получить статью по id
 export const getOnePost = async (req, res) => {
     try {
-        const postId = req.params.id;
+        const postId = req.params.id
+        const post = await PostModel.findOneAndUpdate({
+            _id: postId
+        },
+        {$inc : {viewsCount: 1}},
+        {returnDocument: 'after'})
+        if (!post){
+            console.log('Error')
+            return res.status(404).json({message:'Статья не найдена'})
+        }
 
-        //Получаем статью и обновляем ее
-        await PostModel.findOneAndUpdate({
-            _id: postId,
-        }, {
-            $inc: {viewsCount: 1}
-        }, 
-        {returnDocument: 'after'}),
-        (err, doc) => {
-            if (err) {
-                console.log(err)
-                return res.status(500).json({message:'Не удалось получить статью'})
-            }
-            if (!doc) {
-                return res.status(404).json({
-                    message: 'Статья не найдена'
-                })
-            }
-            res.json(doc)
+        res.json(post)
 
         }
-    }
+    
 
     catch (err) {
         console.log(err)
-        res.status(404).json({message:'Не удалось получить статьи'})
+        res.status(404).json({message:'Не удалось получить статью'})
+    }
+}
+
+//Удалить статью
+export const remove = async (req, res) => {
+    try {
+        const postId = req.params.id
+        await PostModel.findOneAndDelete({
+            _id: postId
+        })
+
+        console.log(`Статья с id ${postId} удалена!`)
+        res.json({
+            successs: true
+        })
+
+        }
+    
+
+    catch (err) {
+        console.log(err)
+        res.status(404).json({message:'Не удалось удалить статью'})
+    }
+}
+
+//Удалить все статьи
+export const removeAll = async (req, res) => {
+    try {
+        const posts = await PostModel.deleteMany()
+        
+        console.log(`Статьи успешно удалены!`)
+        res.json({
+            successs: true
+        })
+
+        }
+    
+
+    catch (err) {
+        console.log(err)
+        res.status(404).json({message:'Не удалось удалить статью'})
+    }
+}
+
+//Обновить статью
+export const update = async (req, res) => {
+    try{
+        const postId = req.params.id
+        await PostModel.updateOne({
+            _id: postId
+        }, 
+        {
+            title: req.body.title,
+            text: req.body.text,
+            imageUrl: req.body.imageUrl,
+            tags: req.body.tags,
+            user: req.userId,
+        })
+        
+        res.json({
+            success: true
+        })
+        console.log(`Статья с id ${postId} успешно обновлена!`)
+    }
+    catch (err) {
+        console.log(err)
+        res.status(404).json({message:'Ошибка обновления статьи статьи'})
     }
 }

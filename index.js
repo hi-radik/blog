@@ -12,7 +12,7 @@ import handleValidationError from './utils/handleValidationError.js'
 const app = express()
 app.use(express.json())
 
-//Для статики
+//Для статики +
 app.use('/uploads', express.static('uploads'))
 
 mongoose

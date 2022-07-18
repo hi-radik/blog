@@ -55,7 +55,7 @@ export const login = async (req,res) => {
             })
         }
 
-        const isValidPassword = bcrypt.compare(req.body.password, user._doc.passwordHash)
+        const isValidPassword = await bcrypt.compare(req.body.password, user._doc.passwordHash)
         if (!isValidPassword) {
             return res.status(400).json({
                 message:'Ошибка авторизации'

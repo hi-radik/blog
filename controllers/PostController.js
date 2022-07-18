@@ -1,6 +1,7 @@
 import PostModel from '../models/Post.js'
 
 
+
 //Создание поста
 export const createPost = async (req,res) => {
     try{
@@ -35,6 +36,22 @@ export const getAllPosts = async (req, res) => {
         res.status(404).json({message:'Не удалось получить статьи'})
     }
 }
+
+//Получить тэги
+export const getTags = async (req, res) => {
+    try {
+        const posts = await PostModel.find().limit(5).exec()
+        const tags = posts.map(obj => obj.tags).flat().slice(0,5)
+        const uniqueTags = [...new Set(tags)]
+        res.json(uniqueTags)
+    }
+
+    catch (err) {
+        console.log(err)
+        res.status(404).json({message:'Не удалось получить теги'})
+    }
+}
+
 
 //Получить статью по id
 export const getOnePost = async (req, res) => {

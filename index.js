@@ -8,9 +8,12 @@ import checkAuth from './utils/checkAuth.js'
 import * as UserController from './controllers/UserController.js'
 import * as PostController from './controllers/PostController.js'
 import handleValidationError from './utils/handleValidationError.js'
+import cors from 'cors';
+
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 //Для статики +
 app.use('/uploads', express.static('uploads'))
@@ -56,7 +59,8 @@ app.delete('/posts/:id',  checkAuth, PostController.remove)
 app.delete('/posts',  checkAuth, PostController.removeAll)
 //Обновить статью
 app.patch('/posts/:id', checkAuth, postCreateValidator, handleValidationError, PostController.update)
-
+//Получить теги
+app.get('/tags', PostController.getTags)
 //Файлы
 //Загрузить картинку - если придет пост на upload, то мы перед тем, как выполнить что-то, выполнить multer функцию upload.single()
 app.post('/uploads', checkAuth, upload.single('image'), (req,res)=>{
